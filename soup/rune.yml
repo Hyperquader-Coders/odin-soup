@@ -1,0 +1,86 @@
+# Generated with runic (docs/DECISIONS.md). Adapted from odin-gtk (MIT, docs/LICENSE-odin-gtk.md).
+version: 0
+platforms:
+  - Linux x86_64
+from:
+  language: c
+  shared.linux: 'libsoup-3.0.so'
+  headers: ../build/sys/usr/include/libsoup-3.0/libsoup/soup.h
+  includedirs:
+    - ../stdinc/
+    - ../build/sys/usr/include/libsoup-3.0/
+    - ../build/sys/usr/include/glib-2.0/
+    - ../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/
+  defines:
+    SOUP_COMPILATION: 1
+    GLIB_COMPILATION: 1
+    GIO_COMPILATION: 1
+    GLIB_DISABLE_DEPRECATION_WARNINGS: 1
+  load_all_includes: true
+  extern:
+    - "../stdinc/*"
+    - "../stdinc/sys/*"
+    - "../build/sys/usr/include/glib-2.0/glib/*"
+    - "../build/sys/usr/include/glib-2.0/glib/deprecated/*"
+    - "../build/sys/usr/include/glib-2.0/gobject/*"
+    - "../build/sys/usr/include/glib-2.0/gio/*"
+    - "../build/sys/usr/include/glib-2.0/gmodule/*"
+    - "../build/sys/usr/include/glib-2.0/*.h"
+    - "../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/*"
+  ignore:
+    types:
+      - va_list
+      - '*autoptr*'
+    functions:
+      - '*autoptr*'
+      - '*auto_cleanup*'
+to:
+  language: odin
+  package: soup
+  out: soup.odin
+  no_build_tag: true
+  detect:
+    parameters: declared
+    arrays:
+        message_headers_free_ranges: [ranges]
+        message_headers_get_ranges: [ranges]
+        message_headers_set_ranges: [ranges]
+        server_add_websocket_handler: [protocols]
+        session_websocket_connect_async: [protocols]
+        websocket_client_prepare_handshake: [protocols]
+        websocket_server_check_handshake: [protocols]
+        websocket_server_process_handshake: [protocols]
+  trim_prefix:
+    types:
+      - Soup
+      - g
+      - G
+    functions:
+      - soup_
+      - g_
+    variables:
+      - soup_
+      - g_
+    constants:
+      - SOUP_
+      - G_
+    enum_type_name: true
+  extern:
+    sources:
+      "../stdinc/stdarg.h": "core:c/libc"
+      "../stdinc/pthread.h": "core:c/libc"
+      "../stdinc/sys/types.h": "core:sys/linux"
+      "../build/sys/usr/include/glib-2.0/glib/*": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/glib.h": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/glib/deprecated/*": "glib glib:glib"
+      "../build/sys/usr/lib/x86_64-linux-gnu/glib-2.0/include/*": "glib glib:glib"
+      "../build/sys/usr/include/glib-2.0/gobject/*": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/glib-object.h": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/gmodule/*": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/gmodule.h": "gobj glib:gobject"
+      "../build/sys/usr/include/glib-2.0/gio/*": "gio glib:gio"
+      "../build/sys/usr/include/glib-2.0/gio.h": "gio glib:gio"
+    remaps:
+      pid_t: Pid
+      uid_t: Uid
+    trim_prefix: true
